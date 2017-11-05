@@ -1,0 +1,58 @@
+﻿@model HW1.Models.User
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <script src="~/Scripts/jquery-2.1.4.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <style>
+        body {
+            background-color: blueviolet;
+        }
+
+        h2 {
+            font-size: 25px;
+            color: darkblue;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="jumbotron">
+
+        <center><a href="/Home/HomePage" class="btn btn-default btn-xs" role="button">Back To Home Page</a></center>
+        
+        <br />
+        @using (Html.BeginForm("Authenticate", "Login", FormMethod.Post))
+        {
+   
+        <table class="table">
+            <tr>
+                <td><b>User Name:</b></td>
+                <td>@Html.TextBoxFor(m => m.UserName) <font color="red"> @Html.ValidationMessageFor(x => x.UserName)</font></td>
+            </tr>
+            <tr>
+                <td><b>Password:</b></td>
+                <td>@Html.PasswordFor(m => m.Password) <font color="red"> @Html.ValidationMessageFor(x => x.Password)</font></td>
+            </tr>
+            <tr>
+                <td><input id="Submit1" type="submit" value="Login" /></td>
+            </tr>
+        </table>
+        }
+        <br />
+
+    </div>
+</body>
+</html>

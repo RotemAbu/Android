@@ -1,0 +1,187 @@
+﻿@model HW1.ViewModel.ProductViewModel
+@using HW1.Models
+@{
+    Layout = null;
+}
+@if (TempData["notice"] != null)
+{
+    <p><b><font color="WHITE">@TempData["notice"]</font></b></p>
+}
+<!DOCTYPE html> <!-- define document as html -->
+<html>
+
+<head> <!-- HTML <head> element contains meta data. Meta data are not displayed -->
+    
+    <meta name="viewport" content="width=device-width" />
+    <title>HomePage</title>
+
+    <!-- link - external styling(external css) for using bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    
+    <!-- add scripts -->
+    <script src="~/Scripts/jquery-2.1.4.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Scripts/modal.js"></script>
+
+    <style type="text/css"> 
+        body {
+            background-color: blueviolet;
+        }
+        h2 {
+            font-size: 25px;
+            color: darkblue;
+        }
+        h3 {
+            font-size: 14px;
+            color: darkblue;
+        }
+        img {
+            width: 140px;
+            height: 140px;
+            position: fixed;
+        } 
+       
+
+    </style> <!-- internal styling(for all the page): define the style of the elements - image size&position, size of h2, and background -->
+</head>
+
+<body> <!-- the visible part of the html is between <body </body>-->
+    
+    <div class="jumbotron">
+
+
+        <img src="/Photos/1733734.jpg" alt="Computer Shop"> <!-- add image(photo)-->
+        <center><h1><b>Computer Shop</b></h1></center>
+   
+
+            <center>
+                <a href="/Login/index" class="btn btn-default btn-xs" role="button">Manager Enter System</a>
+                <a href="/Home/ShowSearchByName" class="btn btn-default btn-xs" role="button">Search Product By Name</a>
+                <a href="/Home/ShowSearchByPrice" class="btn btn-default btn-xs" role="button">Search Product By Price</a>
+                <a href="/UserLogin/index" class="btn-success" role="button">Sign in</a>
+            </center> <!-- links for options in home page -->
+
+            <h2><b>Products Stock: </b></h2>
+
+            <table class="table table-condensed" id="proTA">
+
+                <tr>
+                    <!-- table row -->
+                    <td><b>Product Id</b></td> <!-- table data -->
+                    <td><b>Product Name</b></td>
+                    <td><b>Product Amount</b></td>
+                    <td><b>Price</b></td>
+                    <td><b>Purchase</b></td>
+                </tr>
+
+                @foreach (Product obj in Model.products)
+                {
+                    <tr>
+                        <td>@obj.ProductId</td>
+                        <td>@obj.ProName</td>
+                        <td>@obj.ProAmount</td>
+                        <td>@obj.Price</td>
+                        <td><button type="button" onclick="Pass(this); continueOrder();" class="btn btn-primary">Buy</button></td>
+                    </tr>
+                    }
+            </table>
+
+            <br />
+        
+            <form id="frmAdd">
+                <!-- HTML forms are used to collect user input -->
+
+                <table class="table table-bordered">
+                    <tr>
+                        <td><b>Product Id:</b></td>
+                        <td>@Html.TextBoxFor(m => m.product.ProductId)
+                    </tr>
+                    <tr>
+                        <td><b>Product Name:</b></td>
+                        <td>@Html.TextBoxFor(m => m.product.ProName)
+                    </tr>
+                </table>
+
+                <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" id="butto 1" disabled>Continue Order</button>
+           
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+
+                    <div class="modal-dialog" role="document">
+
+                        <div class="modal-content">
+                            <div class="modal-header">
+
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Purchase Details</h4>
+                            </div>
+                            <div class="modal-body">
+
+                                <p>
+                                    <b>Buyer Name:</b>
+                                    @Html.TextBoxFor(m => m.order.BuyerName)<div style="color:red">@Html.ValidationMessageFor(x => x.order.BuyerName)</div>
+                                </p>
+
+                                <p>
+                                    <b>Amount:</b>
+                                    @Html.TextBoxFor(m => m.order.Quantity)<div style="color:red">@Html.ValidationMessageFor(x => x.order.Quantity)</div>
+                                </p>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" id="btnSubmit1" data-dismiss="modal" onclick="SendData(); btnSubmit_Click()">Save Order</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        
+      
+            <p><h3>&copy; Rotem Abuhatzira  & Aviva avraham</h3></p>
+
+            <script language="javascript">
+                //client side
+
+                function Pass(element) {
+                    var DataRow = document.getElementById('proTA').rows[element.parentNode.parentNode.rowIndex];
+
+                    var pid = DataRow.cells[0].innerHTML;
+                    var pname = DataRow.cells[1].innerHTML;
+                    var amount = DataRow.cells[2].innerHTML;
+                    var price = DataRow.cells[3].innerHTML;
+
+                    $("#product_ProductId").val(pid); //choose the elements for continue order an item
+                    $("#product_ProName").val(pname);
+                }
+
+                function continueOrder() {
+                    document.getElementById("butto 1").disabled = false; //after the client choose an item - now he can press the continue order button
+                }
+
+
+                $("#product_ProductId").attr('readOnly', 'true'); //can't make changes on a choosen item for buy
+                $("#product_ProName").attr('readOnly', 'true');
+
+
+                function SendData() {
+                    var frmData = $("#frmAdd").serialize();
+                    $.post("BuyProduct", frmData, null);
+
+                }
+
+                //document.getElementById("status_order").innerHTML("your order has been succesfully saved")
+                //function btnSubmit_Click() {
+                //    if (ViewData["ShowAlert"] != null)
+                //        alert(ViewData["AlertMessage"])
+                //}
+
+            </script>
+
+        
+        </div>
+
+</body>
+</html>
+

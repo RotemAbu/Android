@@ -1,0 +1,158 @@
+﻿@model HW1.ViewModel.ProductViewModel
+@using HW1.Models
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ManagerPage</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <script src="~/Scripts/jquery-2.1.4.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+    <style>
+        body {
+            background-color: blueviolet;
+        }
+
+        h2 {
+            font-size: 25px;
+            color: darkblue;
+        }
+    </style>
+
+</head>
+<body>
+   
+    <div class="jumbotron">
+        <center>
+            <a href="/Manager/ManagerPage" class="btn btn-default btn-xs" role="button">Back to manager page</a>
+        </center>
+        <br />
+
+            <form id="frmAdd">
+                <table class="table table-bordered">
+                    <tr>
+                        <td><b>Product Id:</b></td>
+                        <td>@Html.TextBoxFor(m => m.product.ProductId) <font color="red"> @Html.ValidationMessageFor(x => x.product.ProductId)</font> </td>
+                    </tr>
+                    <tr>
+                        <td><b>Product Name:</b></td>
+                        <td>@Html.TextBoxFor(m => m.product.ProName)<font color="red"> @Html.ValidationMessageFor(x => x.product.ProName)</font></td>
+                    </tr>
+                    <tr>
+                        <td><b>Product Amount:</b></td>
+                        <td>@Html.TextBoxFor(m => m.product.ProAmount)<font color="red"> @Html.ValidationMessageFor(x => x.product.ProAmount)</font></td>
+                    </tr>
+                    <tr>
+                        <td><b>Price:</b></td>
+                        <td>@Html.TextBoxFor(m => m.product.Price)<font color="red"> @Html.ValidationMessageFor(x => x.product.Price)</font></td>
+                    </tr>
+                    <tr>
+                        <td> <input id="btnSubmit1" type="submit" value="Update" onclick="SendData1()" /> <input id="Submit111" type="submit" value="Delete" onclick="SendData2()" /></td>
+                    </tr>
+                </table>
+            </form>
+
+
+            <br />
+
+            <h2><b>Products Stock: </b></h2>
+            <br />
+            <div id="status"></div>
+        <table class="table table-condensed" id="ProdT">
+            <tr>
+                <td><b>Product Id</b></td>
+                <td><b>Product Name</b></td>
+                <td><b>Product Amount</b></td>
+                <td><b>Price</b></td>
+                <td><b>Operations</b></td>
+            </tr>
+
+        </table>
+
+            <script language="javascript">
+
+                $("#status").text("Loading products....");
+                $.get("GetProductsByJson", null, BindData);
+                $("#product_ProductId").attr('readOnly', 'true');
+                $("#product_ProName").attr('readOnly', 'true');
+                $("#product_Price").attr('readOnly', 'true');
+
+
+                function BindData(products)
+                {
+                    var tbl = $("#ProdT");
+                    $("#ProdT").find("tr:gt(0)").remove();
+                    for (k = 0; k < products.length; k++) {
+                        var newRaw = "<tr>" +
+                            "<td>" + products[k].ProductId + "</td>" +
+                            "<td>" + products[k].ProName + "</td>" +
+                            "<td>" + products[k].ProAmount + "</td>" +
+                            "<td>" + products[k].Price + "</td>" +
+                            "<td>" + "<input type=" + '"' + "button" + '"' + "onclick=" + '"' + "Pass(this)" + '"' + "value=" + '"' + "select" + '"' + "/>" + "</td>" +
+                            "</tr>"
+
+                        tbl.append(newRaw);
+                    }
+
+                    $("#status").text("");
+                }
+
+                function SendData1()
+                {
+
+                    var frmData = $("#frmAdd").serialize();
+                    $("#status").text("Saving product... please wait");
+
+                    $.post("UpdateSubmit", frmData, BindData);
+
+                    //$("#product_ProductId").val("");
+                    //$("#product_ProName").val("");
+                    //$("#product_ProAmount").val("");
+                    //$("#product_Price").val("");
+
+                }
+
+
+                function SendData2()
+                {
+
+                    var frmData = $("#frmAdd").serialize();
+                    $("#status").text("Saving product... please wait");
+
+                    $.post("DeleteSubmit", frmData, BindData);
+
+                    //$("#product_ProName").val("");
+                    //$("#product_ProAmount").val("");
+                    //$("#product_Price").val("");
+
+                }
+
+                function Pass(element)
+                {
+                    var DataRow = document.getElementById('ProdT').rows[element.parentNode.parentNode.rowIndex];
+
+                    var pid = DataRow.cells[0].innerHTML;
+                    var pname = DataRow.cells[1].innerHTML;
+                    var amount = DataRow.cells[2].innerHTML;
+                    var price = DataRow.cells[3].innerHTML;
+
+                    $("#product_ProductId").val(pid);
+                    $("#product_ProName").val(pname);
+                    $("#product_ProAmount").val(amount);
+                    $("#product_Price").val(price);
+                }
+
+          </script>
+</div>
+
+</body>
+</html>

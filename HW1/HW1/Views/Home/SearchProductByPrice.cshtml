@@ -1,0 +1,166 @@
+﻿@model HW1.ViewModel.ProductViewModel
+@using HW1.Models
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SearchProductByPrice</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <script src="~/Scripts/jquery-2.1.4.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Scripts/modal.js"></script>
+
+    <style>
+        body {
+            background-color: blueviolet;
+        }
+
+        h2 {
+            font-size: 25px;
+            color: darkblue;
+        }
+    </style>
+    
+</head>
+<body>
+    
+    <div class="jumbotron">
+        <a href="/Home/HomePage" class="btn btn-default btn-xs" role="button">Go To Home Page</a>
+        <br />
+        <br />
+
+        <form action="SearchProductByPrice" method="post">
+
+            <b>From cost:</b>
+            <input id="Text1" type="text" name="txtFromPrice" value="@Model.product.Price" />
+
+            <b>To cost:</b>
+            <input id="Text1" type="text" name="txtToPrice" value="@Model.product.Price" /><br/>
+            <br />
+            <button type="submit" class="btn btn-primary" id="Submit1">Search Product By cost</button>
+
+        </form>
+
+        <br />
+        <h2><b>Search Results:</b></h2>
+        <br />
+
+        <table class="table table-condensed" id="proTA">
+
+            <tr>
+                <td><b>Product Id</b></td>
+                <td><b>Product Name</b></td>
+                <td><b>Product Amount</b></td>
+                <td><b>Price</b></td>
+                <td><b>Purchase</b></td>
+            </tr>
+            @foreach (Product obj in Model.products)
+            {
+                <tr>
+                    <td>@obj.ProductId</td>
+                    <td>@obj.ProName</td>
+                    <td>@obj.ProAmount</td>
+                    <td>@obj.Price</td>
+                    <td><button type="button" onclick="Pass(this); continueOrder();" class="btn btn-primary">Buy</button></td>
+                </tr>
+            }
+        </table>
+        <br />
+
+        <form id="frmAdd">
+
+            <table class="table table-bordered">
+
+                <tr>
+                    <td><b>Product Id:</b></td>
+                    <td>@Html.TextBoxFor(m => m.product.ProductId) <font color="red"> @Html.ValidationMessageFor(x => x.product.ProductId)</font> </td>
+                </tr>
+                <tr>
+                    <td><b>Product Name:</b></td>
+                    <td>@Html.TextBoxFor(m => m.product.ProName)<font color="red"> @Html.ValidationMessageFor(x => x.product.ProName)</font></td>
+                </tr>
+            </table>
+
+            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" id="butto 1" disabled>Continue Order</button>
+
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+
+                <div class="modal-dialog" role="document">
+
+                    <div class="modal-content">
+                        <div class="modal-header">
+
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Purchase Details</h4>
+                        </div>
+                        <div class="modal-body">
+
+                            <p>
+                                <b>Buyer Name:</b>
+                                @Html.TextBoxFor(m => m.order.BuyerName)
+                                <div style="color:red">@Html.ValidationMessageFor(x => x.order.BuyerName)</div>
+                            </p>
+
+                            <p>
+                                <b>Amount:</b>
+                                @Html.TextBoxFor(m => m.order.Quantity)
+                                <div style="color:red">@Html.ValidationMessageFor(x => x.order.Quantity)</div>
+
+                            </p>
+
+                        </div>
+                        <div class="modal-footer">
+
+                            <button type="button" class="btn btn-primary" id="btnSubmit1" @*data-dismiss="modal"*@ onclick="SendData()" @*btnSubmit_Click()*@>Save Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <br />
+
+        <script language="javascript">
+
+            function continueOrder() {
+                document.getElementById("butto 1").disabled = false;
+            }
+
+            $("#product_ProductId").attr('readOnly', 'true');
+            $("#product_ProName").attr('readOnly', 'true');
+
+
+            function Pass(element)
+            {
+                var DataRow = document.getElementById('proTA').rows[element.parentNode.parentNode.rowIndex];
+
+                var pid = DataRow.cells[0].innerHTML;
+                var pname = DataRow.cells[1].innerHTML;
+                var amount = DataRow.cells[2].innerHTML;
+                var price = DataRow.cells[3].innerHTML;
+
+                $("#product_ProductId").val(pid);
+                $("#product_ProName").val(pname);
+            }
+
+
+            function SendData()
+            {
+                var frmData = $("#frmAdd").serialize();
+                $.post("BuyProduct", frmData, null);
+
+                //alert("Your Order Has Been Saved");
+            }
+
+        </script>
+
+    </div>
+</body>
+</html>

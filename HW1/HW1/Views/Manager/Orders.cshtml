@@ -1,0 +1,65 @@
+﻿@model HW1.ViewModel.ProductViewModel
+@using HW1.Models
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Orders</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <script src="~/Scripts/jquery-2.1.4.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <style>
+        body {
+            background-color: blueviolet;
+        }
+
+        h2 {
+            font-size: 25px;
+            color: darkblue;
+        }
+    </style>
+
+</head>
+<body>
+   
+    <div class="jumbotron">
+
+        <a href="/Manager/ManagerPage" class="btn btn-default btn-xs" role="button">Back to manager page</a>
+        <br />
+
+        <h2><b>Orders List: </b></h2>
+        <br />
+
+        <div id="status"></div>
+
+           <table class="table table-condensed" >
+               <tr>
+                   <td><b>Product Name</b></td>
+                   <td><b>Buyer Name</b></td>
+                   <td><b>Quantity</b></td>
+                   <td><b>Purchase Date</b></td>
+               </tr>
+                @foreach (Order obj in Model.orders)
+                {
+                    <tr>
+                        <td>@obj.ProName</td>
+                        <td>@obj.BuyerName</td>
+                        <td>@obj.Quantity</td>
+                        <td>@obj.PurchaseDate</td>
+
+                    </tr>
+                }
+
+            </table>
+
+</div>
+</body>
+</html>

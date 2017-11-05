@@ -1,0 +1,37 @@
+﻿@model HW1.Models.Product
+@using HW1.Models
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Product</title>
+</head>
+<body>
+    <div>
+        <table>
+            <tr>
+                <td>Product id:</td>
+                <td>@Model.ProductId</td>
+            </tr>
+            <tr>
+                <td>Product name:</td>
+                <td>@Model.ProName</td>
+            </tr>
+            <tr>
+                <td>Product Amount:</td>
+                <td>@Model.ProAmount</td>
+            </tr>
+            <tr>
+                <td>Price:</td>
+                <td>@Model.Price</td>
+            </tr>
+
+        </table>
+    </div>
+</body>
+</html>
